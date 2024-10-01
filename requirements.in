@@ -1,0 +1,42 @@
+# Core
+django~=4.1.0
+celery[redis]
+celery-redbeat
+
+# Model Tools
+django-model-utils
+django-import-export
+
+# Frontend
+django-webpack-loader>=1.0.0
+django-js-routes
+
+# Rest API and Request/Response Processing
+djangorestframework~=3.14.0
+django-debreach
+brotlipy
+django-log-request-id
+drf-spectacular
+djangorestframework-simplejwt~=5.2.2
+django-cors-headers
+django-filter~=23.3
+django-simple-history~=3.5.0
+
+# Database and Persistence
+psycopg2
+bcrypt
+pillow
+
+# Developer Tools
+ipython
+sentry-sdk[django]
+django-health-check~=3.17.0
+
+# Application Deployment and Configuration
+dj-database-url
+gunicorn
+whitenoise
+psutil
+python-decouple
+
+urllib3<2.0.0

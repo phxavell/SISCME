@@ -1,0 +1,27 @@
+.p-timeline.p-timeline-horizontal .p-timeline-event-opposite, .p-timeline.p-timeline-horizontal .p-timeline-event-content {
+    padding: 0 !important;
+    display: flex;
+    white-space: nowrap;
+    margin-left: 0px;
+}
+.p-timeline-event {
+    display: flex !important;
+    flex-direction: column !important;
+
+}
+.p-timeline-event-opposite {
+    margin-bottom: 0.5rem;
+}
+
+.iconDiv {
+    height: 48px !important;
+    width: 48px !important;
+}
+.iconI {
+    font-size: 1.4rem;
+    height: 48px !important;
+    width: 48px !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

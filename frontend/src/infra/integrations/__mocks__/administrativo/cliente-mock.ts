@@ -1,0 +1,23 @@
+export const defaultValuesCliente = {
+	idcli: 0,
+	bairrocli: ``,
+	cepcli: ``,
+	cidadecli: ``,
+	cnpjcli: ``,
+	codigocli: ``,
+	contatocli: ``,
+	datacadastrocli: ``,
+	emailcli: ``,
+	horacadastrocli: ``,
+	inscricaoestadualcli: 0,
+	inscricaomunicipalcli: 0,
+	nomeabreviado: ``,
+	nomecli: ``,
+	nomefantasiacli: ``,
+	numerocli: ``,
+	ruacli: ``,
+	telefonecli: ``,
+	ufcli: ``,
+	badge: 0,
+	ativo: true
+}

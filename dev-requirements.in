@@ -1,0 +1,16 @@
+bandit
+coverage
+django~=4.1.0
+flake8
+isort
+model-bakery
+pre-commit
+pylint==2.17.7
+pylint-django
+prospector==1.10.3
+safety==2.3.4
+pytest
+pytest-django
+pytest-cov
+factory_boy
+django-simple-history==3.5.0

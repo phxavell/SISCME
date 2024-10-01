@@ -1,0 +1,15 @@
+.p-datatable.p-datatable-sm .p-datatable-header {
+    padding: 0 0;
+}
+.secundary-siscme {
+    background: var(--second-color);
+}
+
+.margin-top-custom {
+    padding-bottom: 0
+}
+@media screen and (min-width: 1200px){
+    .margin-top-custom {
+        padding-bottom: 64px
+    }
+}

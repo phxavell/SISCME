@@ -1,0 +1,18 @@
+.labelInput {
+    color: #2783c5 !important;
+}
+
+.withCard >.p-float-label input:focus ~ label,
+.p-float-label input:-webkit-autofill ~ label,
+.p-float-label input.p-filled ~ label,
+.p-float-label textarea:focus ~ label,
+.p-float-label textarea.p-filled ~ label,
+.p-float-label .p-inputwrapper-focus ~ label,
+.p-float-label .p-inputwrapper-filled ~ label,
+.p-float-label .p-tooltip-target-wrapper ~ label {
+    color: #2783c5 !important;
+}
+
+.p-card .p-card-body {
+    padding: 1rem 1.25rem 0 1.25rem !important;
+}

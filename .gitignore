@@ -1,0 +1,65 @@
+*.pyc
+/backend/db.sqlite3
+.DS_Store
+.env
+.env.prod
+*/settings/local.py
+/staticfiles/*
+backend/staticfiles/*
+backend/mediafiles/*
+backend/htmlcov/*
+__pycache__/
+/.vscode/
+.devcontainer/
+
+# coverage result
+.coverage
+/coverage/
+
+# pycharm
+.idea/
+
+# data
+*.dump
+
+# npm
+node_modules/
+npm-debug.log
+tsconfig.tsbuildinfo
+package-lock.json
+
+# Webpack
+/frontend/bundles/*
+/frontend/webpack_bundles/*
+/webpack-stats.json
+
+# Sass
+.sass-cache
+*.map
+
+# General
+/siscme-venv/
+/venv/
+/env/
+/output/
+/cache/
+boilerplate.zip
+
+# Spritesmith
+spritesmith-generated/
+spritesmith.scss
+
+# templated email
+tmp_email/
+
+.direnv
+.envrc
+.tool-versions
+
+celerybeat-schedule
+```
+/frontend/tsconfig.tsbuildinfo
+/frontend/tests/cache/*
+/frontend/tests/coverage/*
+.pre-commit-config.frontend.yaml
+.pre-commit-config.backend.yaml

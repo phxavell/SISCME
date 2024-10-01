@@ -1,0 +1,76 @@
+version: "3.1"
+
+services:
+  db:
+    image: "postgres:12.15-bullseye"
+    environment:
+      - POSTGRES_USER=siscme
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=siscme
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./database/pg_hba.conf:/tmp/pg_hba.conf # TODO: Ajustar esses volumes ao desativar o legacy
+      - dbdata:/var/lib/postgresql/data:delegated
+      - ./database/docker-entrypoint.sh:/docker-entrypoint-initdb.d/docker-entrypoint.sh:delegated
+
+  broker:
+    image: "rabbitmq:alpine"
+
+  result:
+    image: "redis:alpine"
+    restart: unless-stopped
+    ports:
+      - 6379:6379
+
+  frontend:
+    build:
+      dockerfile: frontend/Dockerfile
+      context: .
+    volumes:
+      - ./:/home/user/app/
+      - /home/user/app/frontend/node_modules
+    command: 'sh -c "cp ../pre-commit.example ../.git/hooks/pre-commit && chmod +x ../.git/hooks/pre-commit && npm run dev"'
+    env_file: frontend/.env
+    ports:
+      - "8081:8081"
+
+  backend:
+    build:
+      dockerfile: backend/Dockerfile
+      context: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./:/home/user/app/
+    env_file: backend/.env
+    command: 'sh -c "cp ../pre-commit.example ../.git/hooks/pre-commit && chmod +x ../.git/hooks/pre-commit && ./manage.py migrate && ./manage.py runserver 0.0.0.0:8000"'
+    depends_on:
+      - db
+      - broker
+      - result
+      - frontend
+
+  celery:
+    build:
+      dockerfile: backend/Dockerfile
+      context: .
+    command: celery -A siscme worker -B -l DEBUG
+    volumes:
+      - ./:/home/user/app/
+    env_file: backend/.env
+    depends_on:
+      - db
+      - broker
+      - result
+
+  mailhog:
+    # service for faking a SMTP server
+    image: mailhog/mailhog
+    ports:
+      - "1025:1025" # smtp server
+      - "8025:8025" # web ui
+
+volumes:
+  dbdata:
+    name: siscme_dbdata

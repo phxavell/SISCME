@@ -1,0 +1,9 @@
+#root {
+    overflow-x: hidden;
+    --primary-color: #003060;
+    --second-color: rgb(4, 103, 159);
+    --blue-color: #0E86D4;
+    --scroll-color: rgba(6, 121, 178, 1);
+    margin: 0 auto;
+}
+/*TODO checar se é possível remover esse style*/

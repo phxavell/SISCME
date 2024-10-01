@@ -1,0 +1,26 @@
+#gestao-dados-pessoais {
+    border: none;
+    /*background: rgb(32,164,222);*/
+
+}
+#gestao-dados-pessoais ul li span {
+    color: white;
+    font-weight: bold;
+}
+#gestao-dados-pessoais ul li a:hover {
+    background: #014983FF;/*TODO*/
+    border-radius: 4px;
+}
+.container-dados-pessoais {
+    /*background: rgb(32,164,222);*/
+    width: 70rem;
+    height: 40rem;
+    margin-top: 0.5rem;
+}
+@media screen and (max-width: 70rem) {
+    .container-dados-pessoais {
+        width: 100%;
+        height: auto;
+        margin-top: 0.5rem;
+    }
+}

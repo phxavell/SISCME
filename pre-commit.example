@@ -1,0 +1,135 @@
+#!/bin/bash
+# Vai para o Diretório Raiz do Repositório Git
+cd $(git rev-parse --show-toplevel)
+# Checa necessidade de rodar o pre-commit em dado projeto
+check_change_in() {
+    local target_folder="$1"
+    local root_directory=$(git rev-parse --show-toplevel)
+    local absolute_target_folder="$root_directory/$target_folder"
+    git diff --quiet --cached --exit-code -- "$absolute_target_folder"
+    local diff_result_cache=$?
+    git diff --quiet --exit-code -- "$absolute_target_folder"
+    local diff_result=$?
+    if [ $diff_result -eq 1 ] || [ $diff_result_cache -eq 1 ]; then
+        echo true
+    else
+        echo false
+    fi
+}
+
+check_container_is_active() {
+    local container_name="$1"
+    local container_running=$(docker inspect --format='{{.State.Running}}' "$container_name" 2>/dev/null)
+    if [ "$container_running" == "true" ]; then
+        echo true
+    else
+        echo false
+    fi
+}
+
+check_if_inside_container() {
+    if [ -e "/proc/self/cgroup" ]; then
+        local container_id=$(cat /proc/self/cgroup | grep "docker" | sed -nE 's/^.+\/([0-9a-f]+)$/\1/p' | head -n 1)
+        local is_inside_container=false
+        if [ -n "$container_id" ]; then
+            local proc_pid=$(grep -l "$container_id" /proc/*/cgroup | sed -nE 's/\/proc\/([0-9]+)\/cgroup/\1/p' | head -n 1)
+            if [ -n "$proc_pid" ] && [ -d "/proc/$proc_pid" ]; then
+                is_inside_container=true
+            fi
+        fi
+        echo "$is_inside_container"
+    else
+        echo false
+    fi
+}
+
+check_docker_using() {
+    local container_name="$1"
+    local is_inside_container=$(check_if_inside_container "$container_name")
+    if [ "$is_inside_container" == true ]; then
+        echo 1
+    else
+        local container_is_active=$(check_container_is_active "$container_name")
+        if [ "$container_is_active" == true ]; then
+            echo 2
+        else
+            echo 3
+        fi
+    fi
+}
+
+print_go_start_container() {
+    local container_name="$1"
+    local message_extra="$2"
+    echo -e "\tPor favor, inicie o container \033[38;5;208m$container_name\033[0m utilizando docker-compose up e tente novamente. $message_extra"
+}
+
+# Função para executar pre-commit a partir de variáveis separadas
+execute_from_variables() {
+    local EXIT_CODE=0
+    local config_file="$1"
+    local container_name="$2"
+    local path_project="$3"
+
+    local confirmed_change=$(check_change_in "$path_project")
+    echo -e "\tchecking changes..? \033[38;5;46m$confirmed_change\033[0m"
+
+    if [ "$confirmed_change" == true ]; then
+        local check_docker=$(check_docker_using "$container_name")
+        inside=1
+        outside=2
+        #renomeia o arquivo de config de pre-commit
+        mv ".${config_file}" .pre-commit-config.yaml
+        if [ "$check_docker" == "$inside" ]; then
+            pre-commit run --all-files
+            EXIT_CODE=$?
+        elif [ "$check_docker" == "$outside" ]; then
+            docker exec $container_name pre-commit run --all-files
+            EXIT_CODE=$?
+        elif [ "$path_project" == "frontend" ]; then
+            local root_directory=$(git rev-parse --show-toplevel)
+            local folder_dependence="$root_directory/$path_project/node_modules"
+            if [ -d "$folder_dependence" ]; then
+                pre-commit run --all-files
+                EXIT_CODE=$?
+            else
+                echo -e "$(print_go_start_container "$container_name" "Ou Instale local com npm run install")"
+                EXIT_CODE=1
+            fi
+        else
+            echo -e "$(print_go_start_container "$container_name" "")"
+            EXIT_CODE=1
+        fi
+        # defaz o rename do arquivo
+        mv .pre-commit-config.yaml ".${config_file}"
+    else
+        echo -e "\t\033[38;5;46m$path_project\033[0m precheck skipped."
+    fi
+
+    if [[ $EXIT_CODE -ne 0 ]]; then
+        exit $EXIT_CODE
+    fi
+
+}
+
+# Informações para execução
+file_scripts=(
+    "pre-commit-config.backend.yaml"
+    "pre-commit-config.frontend.yaml"
+)
+container_names=(
+    "siscme-backend-1"
+    "siscme-frontend-1"
+)
+path_projects=(
+    "backend"
+    "frontend"
+)
+EXIT_CODE=0
+# Executar pre-commit para cada conjunto de variáveis
+for i in "${!file_scripts[@]}"; do
+    printf '%.s-' {1..80}
+    echo
+    echo -e "Target_folder: \033[38;5;46m${path_projects[i]}\033[0m"
+    execute_from_variables "${file_scripts[i]}" "${container_names[i]}" "${path_projects[i]}"
+done
