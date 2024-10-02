@@ -114,12 +114,12 @@ execute_from_variables() {
 
 # Informações para execução
 file_scripts=(
-    "pre-commit-config.backend.yaml"
-    "pre-commit-config.frontend.yaml"
+    # "pre-commit-config.backend.yaml"
+    # "pre-commit-config.frontend.yaml"
 )
 container_names=(
-    "siscme-backend-1"
-    "siscme-frontend-1"
+    # "siscme-backend-1"
+    # "siscme-frontend-1"
 )
 path_projects=(
     "backend"

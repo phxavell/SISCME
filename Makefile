@@ -84,4 +84,4 @@ be_test:
 	cd ~/app/backend/ && pytest
 
 pre-commit-config:
-	cp ./pre-commit.example .git/hooks/pre-commit && chmod +x .git/hooks/pre-commit
+#	cp ./pre-commit.example .git/hooks/pre-commit && chmod +x .git/hooks/pre-commit
